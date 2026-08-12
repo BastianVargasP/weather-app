@@ -1,8 +1,10 @@
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { WeatherContext } from "../assets/context/WeatherContext";
+import "./HourlyForecast.css";
 
 const HourlyForecast = () => {
-  const { placeInfo, days, changeDay, findImgWeather, daySelected } = useContext(WeatherContext);
+  const { placeInfo, days, changeDay, findImgWeather, daySelected } =
+    useContext(WeatherContext);
 
   return (
     <>
@@ -18,10 +20,7 @@ const HourlyForecast = () => {
           {placeInfo ? (
             <>
               {placeInfo?.daily.time.map((_, index) => (
-                <option
-                  value={days[new Date(placeInfo.daily.time[index]).getDay()]}
-                  key={`option${index + 1}`}
-                >
+                <option value={index} key={`option${index + 1}`}>
                   {days[new Date(placeInfo.daily.time[index]).getDay()]}
                 </option>
               ))}
@@ -36,29 +35,32 @@ const HourlyForecast = () => {
       <div className="hourlyList">
         {placeInfo ? (
           <>
-            {placeInfo?.hourly.time
-              .slice(
-                Number(dayList.selectedIndex) * 24,
-                Number(dayList.selectedIndex) * 24 + 24,
-              )
+            {placeInfo.hourly.time
+              .slice(daySelected * 24, daySelected * 24 + 24)
               .map((_, i) => {
-                const realIndex = i + Number(dayList.selectedIndex) * 24;
+                const realIndex = i + daySelected * 24;
+                const isNow =
+                  placeInfo.hourly.time[realIndex].slice(0, 13) ===
+                  placeInfo.current.time.slice(0, 13);
 
                 return (
-                  <div className="hourlyItem" key={realIndex}>
+                  <div
+                    className={`hourlyItem${isNow ? " current" : ""}`}
+                    key={realIndex}
+                  >
                     <div className="hourlyTime">
                       <img
                         src={findImgWeather(
-                          placeInfo?.hourly.weather_code[realIndex],
+                          placeInfo.hourly.weather_code[realIndex],
                         )}
                         alt="Sunny icon"
                         className="hourlyIcon"
                       />
-                      <h4>{placeInfo?.hourly.time[realIndex].slice(11)}</h4>
+                      <h4>{placeInfo.hourly.time[realIndex].slice(11)}</h4>
                     </div>
                     <p>
-                      {placeInfo?.hourly.temperature_2m[realIndex]}{" "}
-                      {placeInfo?.hourly_units.temperature_2m}
+                      {placeInfo.hourly.temperature_2m[realIndex]}{" "}
+                      {placeInfo.hourly_units.temperature_2m}
                     </p>
                   </div>
                 );
@@ -66,29 +68,9 @@ const HourlyForecast = () => {
           </>
         ) : (
           <>
-            <div className="hourlyItem"></div>
-            <div className="hourlyItem"></div>
-            <div className="hourlyItem"></div>
-            <div className="hourlyItem"></div>
-            <div className="hourlyItem"></div>
-            <div className="hourlyItem"></div>
-            <div className="hourlyItem"></div>
-            <div className="hourlyItem"></div>
-            <div className="hourlyItem"></div>
-            <div className="hourlyItem"></div>
-            <div className="hourlyItem"></div>
-            <div className="hourlyItem"></div>
-            <div className="hourlyItem"></div>
-            <div className="hourlyItem"></div>
-            <div className="hourlyItem"></div>
-            <div className="hourlyItem"></div>
-            <div className="hourlyItem"></div>
-            <div className="hourlyItem"></div>
-            <div className="hourlyItem"></div>
-            <div className="hourlyItem"></div>
-            <div className="hourlyItem"></div>
-            <div className="hourlyItem"></div>
-            <div className="hourlyItem"></div>
+            {Array.from({ length: 23 }).map((_, i) => (
+              <div className="hourlyItem" key={i}></div>
+            ))}
           </>
         )}
       </div>

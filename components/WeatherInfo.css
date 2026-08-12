@@ -223,7 +223,7 @@
     box-sizing: border-box;
 }
 
-.hourlySelection h4{
+.hourlySelection h4 {
     margin: 0;
     font-size: 1.2rem;
 }
@@ -270,7 +270,7 @@ option::checkmark {
     display: none;
 }
 
-.dash{
+.dash {
     font-weight: 900;
 }
 
@@ -309,7 +309,7 @@ option::checkmark {
 }
 
 .hourlyList::-webkit-scrollbar-track {
-  background: transparent;
+    background: transparent;
 }
 
 
@@ -354,46 +354,51 @@ option::checkmark {
     margin: 0;
 }
 
+.hourlyItem.current {
+    border: 1px solid #4657d9;
+    background-color: #2f2f5f;
+}
+
 @media (min-width: 1200px) {
 
-    .weatherInfo{
+    .weatherInfo {
         justify-content: space-between;
     }
 
-    .weatherContainer{
+    .weatherContainer {
         display: grid;
         grid-template-columns: 800px 380px;
         gap: 2rem;
     }
 
-    .currentWeather{
+    .currentWeather {
         flex-direction: row;
         height: 285px;
         background-image: url("../assets/images/bg-today-large.svg");
     }
 
-    .location{
+    .location {
         align-items: flex-start;
     }
 
-    .weatherDetails{
-        grid-template-columns: repeat(4,1fr);
+    .weatherDetails {
+        grid-template-columns: repeat(4, 1fr);
         grid-template-rows: none;
     }
 
-    .detail{
+    .detail {
         padding: 1rem 1.5rem;
     }
 
-    .detail h4{
+    .detail h4 {
         font-size: 1.1rem;
     }
 
-    .forecastList{
-        grid-template-columns: repeat(7,1fr);
+    .forecastList {
+        grid-template-columns: repeat(7, 1fr);
     }
 
-    .forecastItem{
+    .forecastItem {
         max-width: 100px;
     }
 }
