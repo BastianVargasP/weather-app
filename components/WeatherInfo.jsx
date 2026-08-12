@@ -68,7 +68,7 @@ const WeatherInfo = () => {
                   <div className="forecastItem" key={`day${index}`}>
                     <h4>
                       {days[
-                        new Date(placeInfo.daily.time[index]).getDay()
+                        new Date(placeInfo.daily.time[index] + "T00:00:00").getDay()
                       ].slice(0, 3)}
                     </h4>
                     <img
