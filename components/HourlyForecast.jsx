@@ -21,7 +21,7 @@ const HourlyForecast = () => {
             <>
               {placeInfo?.daily.time.map((_, index) => (
                 <option value={index} key={`option${index + 1}`}>
-                  {days[new Date(placeInfo.daily.time[index]).getDay()]}
+                  {days[new Date(placeInfo.daily.time[index]  + "T00:00:00").getDay()]}
                 </option>
               ))}
             </>

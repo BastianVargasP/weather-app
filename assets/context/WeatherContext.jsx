@@ -134,7 +134,8 @@ function findImgWeather(number) {
 
   // Handle place selection here
   const selectPlace = async (place) => {
-    const url = `https://api.open-meteo.com/v1/forecast?latitude=${place.latitude}&longitude=${place.longitude}&daily=weather_code,temperature_2m_max,temperature_2m_min&hourly=temperature_2m,weather_code&current=temperature_2m,apparent_temperature,relative_humidity_2m,wind_speed_10m,precipitation&temperature_unit=${switchDegrees}&wind_speed_unit=${switchVelocity}&precipitation_unit=${switchPrecipitation}&timezone=auto`;    const res = await fetch(url);
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${place.latitude}&longitude=${place.longitude}&daily=weather_code,temperature_2m_max,temperature_2m_min&hourly=temperature_2m,weather_code&current=weather_code,temperature_2m,apparent_temperature,relative_humidity_2m,wind_speed_10m,precipitation&temperature_unit=${switchDegrees}&wind_speed_unit=${switchVelocity}&precipitation_unit=${switchPrecipitation}&timezone=auto`;    
+    const res = await fetch(url);
     const data = await res.json();
     const placeData = {
       name: `${place.name}`,

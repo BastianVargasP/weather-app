@@ -30,14 +30,14 @@ const CurrentWeather = () => {
             <img
               src={
                 placeInfo
-                  ? findImgWeather(placeInfo?.daily.weather_code[0])
+                  ? findImgWeather(placeInfo?.current.weather_code)
                   : sunny
               }
               alt="Sunny icon"
               className="weatherIcon"
             />
             <h1>
-              {parseInt(placeInfo?.current.temperature_2m)}{" "}
+              {placeInfo?.current.temperature_2m}{" "}
               {placeInfo?.current_units.temperature_2m}
             </h1>
           </>
