@@ -1,9 +1,4 @@
 @font-face {
-    font-family: 'Bricolage';
-    src: url('../assets/fonts/Bricolage_Grotesque/BricolageGrotesque-VariableFont_opsz\,wdth\,wght.ttf') format('truetype');
-}
-
-@font-face {
     font-family: 'DM_Sans';
     src: url('../assets/fonts/DM_Sans/DMSans-VariableFont_opsz\,wght.ttf') format('truetype');
 }
@@ -12,15 +7,7 @@
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 4rem;
-    margin-top: 2rem;
-}
-
-h1 {
-    font-family: 'Bricolage', serif;
-    font-size: 3.5rem;
-    margin: 0;
-    padding: 0;
+    margin-top: 1.5rem;
 }
 
 .search {
@@ -144,7 +131,7 @@ h1 {
 
 @media (min-width: 1200px) {
   .header{
-    margin-top: 0;
+    margin-top: 1rem;
   }
 
   .search{
