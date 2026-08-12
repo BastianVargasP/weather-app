@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState, useMemo } from "react";
 import sunny from "../images/icon-sunny.webp";
 import partlyCloudy from "../images/icon-partly-cloudy.webp";
 import overcast from "../images/icon-overcast.webp";
@@ -7,52 +7,54 @@ import drizzle from "../images/icon-drizzle.webp";
 import rain from "../images/icon-rain.webp";
 import snow from "../images/icon-snow.webp";
 import storm from "../images/icon-storm.webp";
+import { useGeocoding } from "../../hooks/useGeocoding";
+import { useForecast } from "../../hooks/useForecast";
 
 export const WeatherContext = createContext();
 
-const WeatherProvider = ({ children }) => {
-  const [placesList, setPlacesList] = useState([]);
-  const [currentTemp, setCurrentTemp] = useState(null);
-  const [placeInfo, setPlaceInfo] = useState();
-  const [placeData, setPlaceData] = useState({});
+const DAYS = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+];
+const MONTHS = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
 
+const WeatherProvider = ({ children }) => {
   const [switchDegrees, setSwitchDegrees] = useState("celsius");
   const [switchVelocity, setSwitchVelocity] = useState("kmh");
   const [switchPrecipitation, setSwitchPrecipitation] = useState("mm");
   const [switchUnits, setSwitchUnits] = useState("Metric");
-
   const [daySelected, setDaySelected] = useState(0);
 
-  const days = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday"
-  ];
-  const months = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
-
+  const { placesList, setPlacesList, fetchPlace, searchError } = useGeocoding();
+  const { placeInfo, placeData, selectPlace, loading, error } = useForecast({
+    switchDegrees,
+    switchVelocity,
+    switchPrecipitation,
+  });
 
   function changeDay(e) {
     setDaySelected(Number(e.target.value));
   }
 
-function findImgWeather(number) {
+  function findImgWeather(number) {
     switch (number) {
       case 0:
       case 1:
@@ -92,16 +94,13 @@ function findImgWeather(number) {
       case 96:
       case 99:
         return storm;
+      default:
+        return sunny;
     }
   }
 
-  //change units
   const toggleUnits = () => {
-    if (switchUnits === "Metric") {
-      setSwitchUnits("Imperial");
-    } else {
-      setSwitchUnits("Metric");
-    }
+    setSwitchUnits((prev) => (prev === "Metric" ? "Imperial" : "Metric"));
   };
 
   useEffect(() => {
@@ -116,75 +115,54 @@ function findImgWeather(number) {
     }
   }, [switchUnits]);
 
-  // Handle search place here
-  const askPlace = () => {
-    const placeInput = document.querySelector(".searchInput");
-    // console.log(placeInput.value);
-    fetchPlace(placeInput.value);
-  };
-
-  // Fetch place data here
-  const fetchPlace = async (place) => {
-    const url = `https://geocoding-api.open-meteo.com/v1/search?name=${place}&count=5&language=en&format=json`;
-    const res = await fetch(url);
-    const data = await res.json();
-    setPlacesList(data);
-    // console.log(data);
-  };
-
-  // Handle place selection here
-  const selectPlace = async (place) => {
-    const url = `https://api.open-meteo.com/v1/forecast?latitude=${place.latitude}&longitude=${place.longitude}&daily=weather_code,temperature_2m_max,temperature_2m_min&hourly=temperature_2m,weather_code&current=weather_code,temperature_2m,apparent_temperature,relative_humidity_2m,wind_speed_10m,precipitation&temperature_unit=${switchDegrees}&wind_speed_unit=${switchVelocity}&precipitation_unit=${switchPrecipitation}&timezone=auto`;    
-    const res = await fetch(url);
-    const data = await res.json();
-    const placeData = {
-      name: `${place.name}`,
-      country: `${place.country}`,
-      country_code: `${place.country_code}`,
-    };
-    setPlaceData(placeData);
-    setPlaceInfo(data);
-    // console.log(data);
-    setDaySelected(0);
+  // Al elegir un lugar, limpiamos la lista de resultados y reseteamos el día
+  const handleSelectPlace = async (place) => {
+    await selectPlace(place);
     setPlacesList([]);
+    setDaySelected(0);
   };
 
-  // toggle visibility on places list
-  useEffect(() => {
-    const placeList = document.querySelector("#resultsPlaces");
-    if (Object.keys(placesList).length > 0) {
-      placeList.classList.add("isVisible");
-    } else {
-      placeList.classList.remove("isVisible");
-    }
-  }, [placesList]);
+  const contextValue = useMemo(
+    () => ({
+      placesList,
+      fetchPlace,
+      selectPlace: handleSelectPlace,
+      placeInfo,
+      placeData,
+      days: DAYS,
+      months: MONTHS,
+      toggleUnits,
+      switchUnits,
+      switchDegrees,
+      switchVelocity,
+      switchPrecipitation,
+      setSwitchDegrees,
+      setSwitchVelocity,
+      setSwitchPrecipitation,
+      daySelected,
+      setDaySelected,
+      changeDay,
+      findImgWeather,
+      loading,
+      error: error || searchError,
+    }),
+    [
+      placesList,
+      placeInfo,
+      placeData,
+      switchUnits,
+      switchDegrees,
+      switchVelocity,
+      switchPrecipitation,
+      daySelected,
+      loading,
+      error,
+      searchError,
+    ],
+  );
 
   return (
-    <WeatherContext.Provider
-      value={{
-        placesList,
-        setPlacesList,
-        askPlace,
-        fetchPlace,
-        selectPlace,
-        placeInfo,
-        placeData,
-        days,
-        months,
-        toggleUnits,
-        switchUnits,
-        switchDegrees,
-        switchVelocity,
-        switchPrecipitation,
-        setSwitchDegrees,
-        setSwitchVelocity,
-        setSwitchPrecipitation,
-        daySelected,
-        setDaySelected,
-        changeDay,
-        findImgWeather,
-      }}
-    >
+    <WeatherContext.Provider value={contextValue}>
       {children}
     </WeatherContext.Provider>
   );

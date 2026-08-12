@@ -1,6 +1,7 @@
 import sunny from "../assets/images/icon-sunny.webp";
 import { useContext } from "react";
 import { WeatherContext } from "../assets/context/WeatherContext";
+import { getDayName } from "../utils/dates";
 
 const CurrentWeather = () => {
   const { placeData, placeInfo, days, months, findImgWeather } =
@@ -16,7 +17,7 @@ const CurrentWeather = () => {
             </h2>
 
             <h3>
-              {days[new Date(placeInfo?.hourly.time[0]).getDay()]},{" "}
+              {getDayName(placeInfo?.hourly.time[0].slice(0, 10))},{" "}
               {months[new Date(placeInfo?.hourly.time[0]).getMonth()]}{" "}
               {new Date(placeInfo?.hourly.time[0]).getDate()},{" "}
               {new Date(placeInfo?.hourly.time[0]).getFullYear()}

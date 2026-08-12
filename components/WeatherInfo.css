@@ -359,6 +359,87 @@ option::checkmark {
     background-color: #2f2f5f;
 }
 
+.statusMessage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 2rem;
+}
+
+.spin {
+    animation: spin 1s linear infinite;
+}
+
+.weatherInfo,
+.hourlyForecast {
+  position: relative;
+  transition: opacity 0.2s ease;
+}
+
+.weatherInfo.isLoading,
+.hourlyForecast.isLoading {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.loadingOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+.spinner {
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  border-top-color: #4657d9;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.statusMessage.error {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background-color: #3a1f2b;
+  border: 0.5px solid #ff6b6b55;
+  border-radius: 0.5rem;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 1rem;
+}
+
+.statusMessage.error p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.statusIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+  flex-shrink: 0;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 @media (min-width: 1200px) {
 
     .weatherInfo {

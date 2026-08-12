@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { WeatherContext } from "../assets/context/WeatherContext";
 import "./HourlyForecast.css";
+import { getDayName } from "../utils/dates";
 
 const HourlyForecast = () => {
   const { placeInfo, days, changeDay, findImgWeather, daySelected } =
@@ -21,7 +22,7 @@ const HourlyForecast = () => {
             <>
               {placeInfo?.daily.time.map((_, index) => (
                 <option value={index} key={`option${index + 1}`}>
-                  {days[new Date(placeInfo.daily.time[index]  + "T00:00:00").getDay()]}
+                  {getDayName(placeInfo.daily.time[index])}
                 </option>
               ))}
             </>
